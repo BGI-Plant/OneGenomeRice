@@ -1,0 +1,117 @@
+# 序列基准测试配置文件
+# 支持注释，格式更易读
+
+# 模型配置
+model_path: "path_to_your_model_checkpoint"
+
+# 如果没有模型路径，用已有的embedding文件直接做下游任务，需要填写模型名称
+# model_name: ""
+
+# 数据集特征配置文件路径
+datasets_feature_path: "../dataset/datasets_info.yaml"
+
+wandb_report: False
+wandb_project: "mlp"
+wandb_entity: "wandb_entity"
+wandb_online: False
+
+# 如果没有模型文件，用已有的embedding文件直接做下游任务，需要填写模型层数
+# num_layers: 12
+
+# 评估数据集
+eval_datasets:
+  # - chromatin_access_MH63_agront
+  # - chromatin_access_ZS97_agront
+  # - poly_a_japonica_agront
+  # - poly_a_indica_agront
+  # - bulk_gene_exp_agront
+
+  - chromatin_access_512
+  - Epigenetic_Marks_Prediction-Histone
+  - smallRNA
+  - splice_sites_labels
+  - RiceVar_512
+  - enhancer_strength
+
+  # - enhancer_regions
+  # - lncRNA
+  # - rice_nlr
+  # - RiceVar_6k
+  # - RiceVar_8k
+
+  # - CDS_multilabel
+  # - bulk_single_base_Callus
+
+  # - sweep_region_psr
+  # - sweep_region_sor
+  # - sweep_region_8k
+  # - sweep_region_32k
+  # - sweep_region_100k
+
+  # - varieties_classification_8k
+  # - varieties_classification_32k
+  # - varieties_classification_128k
+
+# GPU配置
+# gpu_list: [0,1]
+layer_to_eval: [12]
+
+# 随机种子
+seed: 42
+
+# embedding 提取
+embedding_output_dir: "./embedding_path"
+# 提取embedding时数据集分割粒度
+embedding_extract_split: 50000
+batch_size: 8
+
+# 结果保存路径
+eval_result_path: "./results_path"
+
+# 数据集路径
+dataset_path: "../dataset/"
+
+# 分类器类型
+classifer_type: "MLP"
+
+# 二倍型及家系等多序列对应单标签的拼接方式（1：拼接 eg:2x1024->1x2048，0：平均池化 eg:nx1024->1024）
+pooled_embeddings_cat_dim: 0
+
+# 任务调度
+# 每个GPU上可以运行任务的总权重数
+process_power_per_gpu: 5
+# embedding提取任务占用权重
+embedding_process_power: 4
+# eval任务占用权重
+eval_process_power: 1
+
+# mlp配置
+mlp_dropout: 0.2
+mlp_lr: 0.0001
+mlp_epochs: 100
+save_last_epoch_model: False
+# RF配置
+rf_n_estimators: 100
+# XGB配置
+xgb_n_estimators: 100
+xgb_eval_metric: 'mlogloss'
+xgb_learning_rate: 0.1
+xgb_max_depth: 6
+
+# 报告生成
+# 可报告的分类/标签指标： ["accuracy","roc_auc","precision","recall","f1","mcc"]
+# 可报告的回归指标： ["r2","pearsonr","spearmanr"]
+# 提取每个数据集中的最佳结果，如果该行只写一个指标，则提取该指标最佳层的所有结果；如果该行写多个指标，则从所有层中分别提取这些指标的最佳结果。生成表格.
+target_best_table:
+  - "accuracy"
+  - "roc_auc"
+  - ["roc_auc", "accuracy"]
+  - "pearsonr"
+
+# 绘制每个数据集的折线图，横轴为layer，如果该行只有一个指标，则绘制该指标的折线图；如果该行写多个指标，则第一个指标为主指标，以主指标绘图，其余为副指标，副指标在图注中，为主指标最好层的副指标值。
+target_layer_line_figure:
+  - ["roc_auc", "accuracy"]
+  - ["accuracy", "roc_auc"]
+  - "pearsonr"
+
+
