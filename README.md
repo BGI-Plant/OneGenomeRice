@@ -5,8 +5,8 @@ NOTE (Preparation Phase – to be removed before public release):
 - The research team is responsible for preparing all technical materials in the repository. The OSPO (Open Source Program Office) is responsible for conducting a compliance review and supplementing the repository with required governance documents, including CODE_OF_CONDUCT.md, CONTRIBUTING.md, LICENSE.md, and SECURITY.md.
 - The README is recommended to follow the structure below. This serves as a guideline rather than a strict requirement, and may be adapted based on project-specific needs.
 
-<img width="4144" height="3745" alt="图片6" src="https://github.com/user-attachments/assets/e30b5660-8a20-43ec-994f-c390244b9952" />
 
+<img width="4144" height="4000" alt="OGR" src="https://github.com/user-attachments/assets/4daca7d1-4d38-41f2-8b95-00d1331f3db8" />
 
 # OneGenome-Rice (OGR): A Genomic Foundation Model for Rice
 ## 1. Introduction
