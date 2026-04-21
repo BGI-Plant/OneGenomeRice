@@ -1,7 +1,7 @@
 # OneGenomeRice (OGR): A Genomic Foundation Model for Rice
 
 <div align="center">
-    <img src="figure/main.png" width="99%" alt="Genos" />
+    <img src="figure/main.png" width="99%" alt="OGR" />
 </div>
 
 ## 1. Introduction
@@ -97,7 +97,7 @@ The following table summarizes key specifications.
 
 ### Training Process
 
-Genos pre-training is built on **[Megatron-LM](https://github.com/NVIDIA/Megatron-LM)** with **5D parallelism** (**TP, PP, CP, DP, EP**).
+OGR pre-training is built on **[Megatron-LM](https://github.com/NVIDIA/Megatron-LM)** with **5D parallelism** (**TP, PP, CP, DP, EP**).
 
 - **Key Features**
 
@@ -174,7 +174,7 @@ OGR models are available for download from [Hugging Face](https://huggingface.co
 
 ## 5. Application Scenarios
 
-To further illustrate the practical value, extensibility, and potential of Genos, we present two representative application cases.
+To further illustrate the practical value, extensibility, and potential of OGR, we present two representative application cases.
 
 - **Case 1: [Identification of *indica-japonica* Introgression](applications/1.identification_of_indica-japonica_introgression/README.md)**
 
