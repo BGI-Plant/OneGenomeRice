@@ -195,4 +195,4 @@ If you use this work in your research, please cite the following paper:
 ```
 
 ## 9. Contact(TODO!)
-If you have any questions, please raise an issue or contact us at [genos@zhejianglab.org](mailto:genos@zhejianglab.org).
+If you have any questions, please raise an issue or contact us at [genos@zhejianglab.org](mailto:genos@zhejianglab.org), [bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn).
