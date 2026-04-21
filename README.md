@@ -75,7 +75,16 @@ Pre-training is implemented with **[Megatron-LM](https://github.com/NVIDIA/Megat
   - **I/O:** **cyclic** data loader with **8** worker processes
   - **Memory / attention:** Flash Attention; GQA for KV efficiency
 
-## 3. Performance Evaluation(TODO!)
+## 3. Performance Evaluation  
+Short-sequence tasks: Competitive overall performance with strong results in chromatin accessibility, epigenetic marks, and small RNA prediction, but weaker in splice sites and variant detection.  
+Long-sequence tasks: Stable performance across diverse tasks, with advantages in variant detection at longer contexts but not consistently leading in all categories.  
+Single-nucleotide tasks: Noticeable performance gap in high-resolution predictions, indicating limited nucleotide-level modeling capacity.  
+Sweep region identification: Clear advantage in long-context settings (8k–100k), demonstrating superior ability to capture large-scale genomic signals.  
+Varieties classification: Consistently outperforms other models across increasing sequence lengths, highlighting strong capability in population structure and evolutionary pattern recognition.  
+AgroNT benchmark tasks: Strong performance in chromatin accessibility but limited in poly(A) site and gene expression prediction, reflecting weaknesses in fine-grained regulatory modeling.  
+<div align="center">
+    <img src="figure/Performance Evaluation.png" width="60%" alt="Performance Evaluation" />
+</div>
 
 
 ## 4. Quickstart
