@@ -1,19 +1,13 @@
 <div align="center">
-    <img src="figure/main.png" width="99%" alt="main" />
+    <img src="figure/main.png" width="99%" alt="Genos" />
 </div>
 
-# OneGenomeRice (OGR): A Genomic Foundation Model for Rice
+# OneGenome-Rice (OGR): A Genomic Foundation Model for Rice
 ## 1. Introduction
 OGR is a foundational AI infrastructure for the next generation of AI-driven precision breeding and functional genomics in rice.
 OGR is a generative genomic foundation model designed to process DNA sequences up to 1 million base pairs in length. The model features 1.25 billion total parameters, utilizing a Mixture of Experts (MoE) architecture that allows for high representational capacity while maintaining computational efficiency during inference. OGR was pre-trained on a curated corpus of 422 rice genomes, representing a diverse array of genotypes from the rice genome group, which includes both modern high-yielding varieties and wild ancestral populations. We detail the architectural innovations, dataset composition, and application-specific findings that define OGR.
 ## 2. Model Information
-The following figure illustrates the overall workflow of the model, including training data processing, model architecture, training process and downstream model inference and applications.
-
-<div align="center">
-  <img src="figure\model.png" width="90%" title="Architecture">
-</div>
-
-The subsections below summarize **training data**, **model architecture**, and **training process**
+OGR is a decoder-only MoE Transformer for long genomic context. The subsections below summarize **training data**, **model architecture**, and **training process** (full detail in the **Technical Report**, URL to be added).
 
 ### Training Data
 The training corpus is a **QC-filtered pangenome of 422 rice genomes** spanning cultivated and wild *Oryza* diversity. For preprocessing and sampling details, see the **Technical Report**(**文章URL**).
@@ -81,7 +75,16 @@ Pre-training is implemented with **[Megatron-LM](https://github.com/NVIDIA/Megat
   - **I/O:** **cyclic** data loader with **8** worker processes
   - **Memory / attention:** Flash Attention; GQA for KV efficiency
 
-## 3. Performance Evaluation(TODO!)
+## 3. Performance Evaluation  
+- **Short-sequence tasks:** Competitive overall performance with strong results in chromatin accessibility, epigenetic marks, and small RNA prediction, but weaker in splice sites and variant detection.  
+- **Long-sequence tasks:** Stable performance across diverse tasks, with advantages in variant detection at longer contexts but not consistently leading in all categories.  
+- **Single-nucleotide tasks:** Noticeable performance gap in high-resolution predictions, indicating limited nucleotide-level modeling capacity.  
+- **Sweep region identification:** Clear advantage in long-context settings (8k–100k), demonstrating superior ability to capture large-scale genomic signals.  
+- **Varieties classification:** Consistently outperforms other models across increasing sequence lengths, highlighting strong capability in population structure and evolutionary pattern recognition.  
+- **AgroNT benchmark tasks:** Strong performance in chromatin accessibility but limited in poly(A) site and gene expression prediction, reflecting weaknesses in fine-grained regulatory modeling.  
+<div align="center">
+    <img src="figure/Performance Evaluation.png" width="60%" alt="Performance Evaluation" />
+</div>
 
 
 ## 4. Quickstart
@@ -99,13 +102,13 @@ docker run -it --gpus all --shm-size 32g zjlabgenos/mega:v1 /bin/bash
 ```
 
 ### Model Download
-Genos models are available for download from [Hugging Face](https://huggingface.co/ZhejiangLab/OneGenomeRice) and [ModelScope](https://modelscope.cn/models/zhejianglab/OneGenomeRice). Each model employs a hybrid Mixture-of-Experts (MoE) architecture and supports analysis at single-nucleotide resolution.
+Genos models are available for download from [Hugging Face](https://huggingface.co/ZhejiangLab/AgriGenome) and [ModelScope](https://modelscope.cn/models/zhejianglab/AgriGenome). Each model employs a hybrid Mixture-of-Experts (MoE) architecture and supports analysis at single-nucleotide resolution.
 
 <div align="center">
 
 | **Model** | **Total Params** | **Hugging Face** | **ModelScope** |
 |:---------:|:----------------:|:----------------:|:--------------:|
-| OGR-1.25B | 1.25B | [🤗 Hugging Face](https://huggingface.co/ZhejiangLab/OneGenomeRice) |[🤖 ModelScope](https://modelscope.cn/models/zhejianglab/OneGenomeRice) |
+| OGR-1.25B | 1.25B | [🤗 Hugging Face](https://huggingface.co/ZhejiangLab/AgriGenome) |[🤖 ModelScope](https://modelscope.cn/models/zhejianglab/AgriGenome) |
 
 </div>
 
@@ -119,12 +122,18 @@ TODO
 ## 5. Application Scenarios(TODO!)
 To further illustrate the practical value, extensibility, and potential of Genos, we present two representative application cases.
 
-- **Case 1: [*Indica*-*Japonica* Introgression Identification](indica-japonica_introgression_analysis/README.md)**  
-  This case aims to leverage the representation learning capability of the OneGenome-Rice foundation model to perform fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between indica (Oryza Sativa subsp. Indica) and japonica (Oryza Sativa subsp. Japonica). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OneGenome-Rice model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
+- **Case 1: [*Indica*-*Japonica* Introgression Identification](applications/4.gene_expression_modeling_on_DNA_and_ATAC/senario.md)**  
+  This case aims to exploit the capacity of the OGR foundation model for fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (*Oryza sativa* subsp. *indica*) and *japonica* (*Oryza sativa* subsp. *japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OGR model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
+  
+- **Case 2: [Identification of Trait-Associated Loci](applications/2.Identification_of_Trait-Associated_Loci/Readme.md)**  
+  This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenomeRice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
 
-- **Case 2: [Text-Genome Model Fusion](Text-genome_model_fusion/Case_2_Text_Genome_Model_Fusion.md)**  
-  This case explores a multimodal framework that integrates genome-scale sequence encoders with large language models. It emphasizes the ability to jointly leverage biological prior knowledge, literature-based reasoning, and sequence-level representations, paving the way for more intelligent, interpretable, and knowledge-grounded bio-AI systems.
+- **Case 3: [Gene Expression Prediction based on DNA](applications/3.gene_expression_modeling_on_DNA/README.md)**
 
+
+- **Case 4: [Gene Expression Prediction based on DNA and Other Modality](applications/4.gene_expression_modeling_on_DNA_and_ATAC/senario.md)**  
+  A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits.
+This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
 ## 6. Model Inference Optimization and Adaptation(待确认)
 ### vLLM Inference
 We conduct inference optimization experiments on large language models using the vLLM framework. This initiative significantly enhances throughput and reduces inference latency. By leveraging vLLM’s innovative ```PagedAttention``` algorithm and efficient memory management mechanisms, we achieve a throughput improvement of over 7× compared with conventional inference approaches.

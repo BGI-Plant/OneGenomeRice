@@ -4,7 +4,7 @@
 
 ## **1.Task Description**
 
-This task aims to leverage the representation learning capability of the OneGenome-Rice foundation model to perform fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (Oryza Sativa subsp. *Indica*) and *japonica* (Oryza Sativa subsp. *Japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OneGenome-Rice model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
+This case aims to exploit the capacity of the OGR foundation model for fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (*Oryza sativa* subsp. *indica*) and *japonica* (*Oryza sativa* subsp. *japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OGR model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
 
 ## **2.Data Source and Processing**
 
@@ -14,7 +14,7 @@ Data foundation: a collection of high-quality assembled rice genomes
 
 Subpopulation assignment: based on subpopulation labels from the RiceVarMap database
 
-Sample selection: samples overlapping with the 3KRGP (3K Rice Genome Project) were selected, followed by further filtering using whole-genome variation–based principal component analysis (PCA). Finally, each 10 representative samples were selected from both *indica* and temperate *japonica* groups, aiming to preserve within-subpopulation genetic diversity while minimizing potential interference from introgression introduced during breeding history. And one additional representative sample from each of *indica* and *japonica* was selected to construct an independent test set for evaluation.
+Sample selection: samples overlapping with the 3KRGP (3K rice genome project) were selected, followed by further filtering using whole-genome variation–based principal component analysis (PCA). Finally, each 10 representative samples were selected from both *indica* and temperate *japonica* groups, aiming to preserve within-subpopulation genetic diversity while minimizing potential interference from introgression introduced during breeding history. And one additional representative sample from each of *indica* and *japonica* was selected to construct an independent test set for evaluation.
 
 ## **3. Task Design**
 
@@ -22,13 +22,13 @@ Sample selection: samples overlapping with the 3KRGP (3K Rice Genome Project) we
 
 The model is built upon the OneGenome-Rice foundation model. Unlike conventional fine-tuning approaches, this study does not update the parameters of the foundation model. Instead, it directly extracts embeddings from each 8 kb sequence and builds a lightweight downstream predictive model based on these representations, with the core workflow as follows:
 
-![Overall framework and workflow](images/Introgression_Analysis-a.png)
+![Overall framework and workflow](images/Introgression_Framework.png)
 
 **Data Construction and Partitioning**: Whole-genome sequences from *indica* and *japonica* rice are collected and divided into training and test sets at the individual level (10:1 ratio).
 
 **Genomic Window Segmentation**: Each genome is partitioned into fixed-length sliding windows (8 kb), generating a set of sequence fragments that cover the entire genome.
 
-**Sequence Representation Extraction**: Each 8 kb sequence fragment is encoded using the OneGenome-Rice foundation model to obtain high-dimensional embedding representations.
+**Sequence Representation Extraction**: Each 8 kb sequence fragment is encoded using the OGR foundation model to obtain high-dimensional embedding representations.
 
 **Downstream Modeling**: A random forest model is trained on these embeddings to learn the mapping from sequence representations to subpopulation assignment probabilities ($P_{\mathrm{indica}}$: probability of belonging to *indica*; $P_{\mathrm{japonica}}$: probability of belonging to *japonica*).
 
@@ -38,23 +38,24 @@ The model is built upon the OneGenome-Rice foundation model. Unlike conventional
 
 Model performance is evaluated on the test set using the true subpopulation labels of each sample. Classification performance is assessed using AUC (Area Under the Curve) and ACC (Accuracy), which together reflect the model’s overall ability to distinguish subpopulation origins.
 
-| **Test Set** | **Classifier** | **ACC** | **AUC** |
-| --- | --- | --- | --- |
-| 1 Temperate *Japonica* | Random Forest | 0.804 | 0.794 |
-| + 1 *Indica* | (n_estimators=100) |  |  |
 
-Based on the subpopulation probabilities ($P_{\mathrm{indica}}$ and $P_{\mathrm{japonica}}$), genomic segments are classified as follows:
+| **Test Set** | **Classifier** | **ACC** | **AUC** |
+|:---:|:---:|:---:|:---:|
+| 1 Temperate *japonica* + 1 *indica* | Random Forest (n_estimators=100) | 0.804 | 0.794 |
+
+
+Based on the subpopulation probabilities ($P_{\mathrm{*indica*}}$ and $P_{\mathrm{*japonica*}}$), genomic segments are classified as follows:
 
 - If either probability exceeds 0.8, the segment is assigned to the corresponding subpopulation.  
 - If both probabilities are below 0.8, or both exceed 0.8, the segment is classified as a low-differentiation region, indicating weak or ambiguous subpopulation signals.
 
-This strategy enables effective identification of: 1) regions with pure subpopulation origin; 2) potential introgressed segments; 3) conserved shared regions
+This strategy enables effective identification of: 1) regions with pure origin; 2) potential introgressed segments; 3) conserved shared regions between *japonica* and *indica*
 
 ### **(4) Case Study**
 
 We tried to apply this framework to investigate *indica* introgression in the *japonica* cultivar Yanfeng 47 (YF47), a representative breeding line derived from historical inter-subspecific breeding behavior. These regions were consistently organized in extended blocks rather than isolated loci, indicating that introgression is captured at the segment level, reflecting the introgression of adjacent genomic fragments during breeding.
 
-![Case study illustration (e.g. YF47)](images/Introgression_Analysis-b.png)
+![Case study illustration (e.g. YF47)](images/Elite_Japonica_Cultivar_YF47_Introgression.png)
 
 ## **4. Project structure**
 
@@ -103,7 +104,7 @@ Run all commands from the **repository root** so relative paths in the YAML file
 4. **Edit output paths in YAML**  
    In `config/train_rf_config.yaml`, set `embedding.output_dir` and `output.result_dir` (defaults `embedding_path`, `results_path`). The trained RF path used later is under `results_path/<model.name>/last_epoch_model/`.
 
-### **5.3 Train the random forest (`scripts/train_rf.py`)**
+### **5.3 Random forest training (`scripts/train_rf.py`)**
 
 Run this **after** windowed `train.jsonl` / `test.jsonl` exist (Section 5.2, step 1).
 

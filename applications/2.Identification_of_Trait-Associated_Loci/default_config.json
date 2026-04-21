@@ -1,0 +1,64 @@
+{
+  "project": {
+    "name": "rice_quality_loci",
+    "description": "Bidirectional attention-based differential locus discovery in selected rice candidate regions"
+  },
+  "paths": {
+    "data_dir": "Data",
+    "results_dir": "Results",
+    "vcf": "Data/samples.vcf.gz",
+    "vcf_index": "Data/samples.vcf.gz.tbi",
+    "phenotype": "Data/phenotype.tsv",
+    "reference_fasta": "Data/osa1_r7.asm.fa.gz",
+    "reference_fasta_fai": "Data/osa1_r7.asm.fa.gz.fai",
+    "reference_fasta_gzi": "Data/osa1_r7.asm.fa.gz.gzi",
+    "gene_annotation": "Data/chr06.gff3.gz",
+    "candidate_regions": "Data/candidate_regions.bed",
+    "model": "Data/OneGenomeRice_model" // You may need to set it into your path to OneGenomeRice model.
+  },
+  "workflow": {
+    "chromosome": 6,
+    "window_size": 8000,
+    "stride": 4000,
+    "region_names": [
+      "Region 1",
+      "Region 2",
+      "Region 3",
+      "Region 4"
+    ],
+    "matrix_files": [
+      "hap1_attention_collapsed.csv",
+      "hap1_attention_collapsed_revcomp.csv"
+    ],
+    "gene_metric_top_n": 8,
+    "gene_metrics_for_summary": [
+      "peak_density",
+      "shannon_entropy"
+    ],
+    "target_genes": {
+      "LOC_Os06g04200": "Wx",
+      "LOC_Os06g12450": "ALK"
+    },
+    "reference_download": {
+      "url": "https://rice.uga.edu/osa1r7_download/osa1_r7.asm.fa.gz"
+    }
+  },
+  "environment": {
+    "conda_env": "",
+    "conda_sh": "",
+    "required_python_modules": [
+      "Bio",
+      "cyvcf2",
+      "matplotlib",
+      "numpy",
+      "pandas",
+      "pysam",
+      "scipy",
+      "seaborn",
+      "statsmodels",
+      "torch",
+      "tqdm",
+      "transformers"
+    ]
+  }
+}
