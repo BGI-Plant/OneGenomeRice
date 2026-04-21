@@ -1,8 +1,10 @@
+# OneGenome-Rice (OGR): A Genomic Foundation Model for Rice
+
 <div align="center">
     <img src="figure/main.png" width="99%" alt="Genos" />
 </div>
 
-# OneGenome-Rice (OGR): A Genomic Foundation Model for Rice
+
 ## 1. Introduction
 OGR is a foundational AI infrastructure for the next generation of AI-driven precision breeding and functional genomics in rice.
 OGR is a generative genomic foundation model designed to process DNA sequences up to 1 million base pairs in length. The model features 1.25 billion total parameters, utilizing a Mixture of Experts (MoE) architecture that allows for high representational capacity while maintaining computational efficiency during inference. OGR was pre-trained on a curated corpus of 422 rice genomes, representing a diverse array of genotypes from the rice genome group, which includes both modern high-yielding varieties and wild ancestral populations. We detail the architectural innovations, dataset composition, and application-specific findings that define OGR.
@@ -46,34 +48,41 @@ The following table summarizes key specifications.
 </div>
 
 ### Training Process
-Pre-training is implemented with **[Megatron-LM](https://github.com/NVIDIA/Megatron-LM)** on **128 NVIDIA A100-80GB GPUs** (**16 nodes × 8 GPUs**) on the National Artificial Intelligence Public Computing Power Open Innovation Platform (**Nanhu** scheduler; resource pool **>1,000** A100-80GB GPUs). End-to-end runtime is **~8 days**. Parallelism is **five-dimensional**: tensor, pipeline, context, data, and expert (**TP, PP, CP, DP, EP**).
+Genos pre-training is built on **[Megatron-LM](https://github.com/NVIDIA/Megatron-LM)** with **5D parallelism** (**TP, PP, CP, DP, EP**).
 
 - **Key Features**
-  - **MoE:** 8 experts, Top-2 routing, load-balancing + Z-loss (see **Key Optimizations**)
-  - **GQA:** 16 heads, 8 KV groups
-  - **RoPE:** base **50M** for ultra-long context (up to **1M** tokens)
+  - **MoE:** 8 experts, Top-2 routing, sparse FFN execution
+  - **GQA:** grouped-query attention for lower KV memory
+  - **RoPE:** base **50M**, supports ultra-long context
   - **Modern stack:** RMSNorm, SwiGLU, Flash Attention
 
 - **Pre-training Strategy**
-  - **Objective:** Next Token Prediction (**NTP**) under self-supervision
-  - **Progressive context scaling:** multistage training with longer sequence windows, **learning-rate annealing** (mitigate catastrophic forgetting), and **RoPE-based** context window scaling up to **1M** tokens
-  - **Sequence curriculum (initial phase):** **~490B** tokens; window sizes **8,192 / 32,768 / 131,072 / 1,024,000** bp at mix **5 : 2 : 2 : 1**; **8k** and **32k** combine **gene-dense** regions (gene bodies + **3 kb** flanking from **190** annotated genomes) with randomized whole-genome tiling; **128k** and **1M** use whole-genome tiling only; **reverse-complement** at all scales
-  - **Continued pre-training (CPT):** **~104B** additional tokens (reshuffled lengths/orientations); **no** position-specific / intergenic-distance filtering
-  - **Tokenizer / data:** one-hot–style nucleotide encoding (A, T, C, G, N); assemblies as in **Training Data**
+  - **Objective:** self-supervised Next Token Prediction (**NTP**)
+  - **Length curriculum:** **8K → 32K → 128K → 1M** tokens
+  - **Orientation:** reverse-complement used across scales
+  - **Data:** chromosome-scale de novo assemblies from public resources
+  - **Tokenizer:** one-hot DNA encoding (A, T, C, G, N)
 
 - **Infrastructure**
-  - **Framework:** Megatron-LM on **128** GPUs (**16×8** A100-80GB)
+  - **Framework:** Megatron-LM on large A100 clusters (up to **256** GPUs)
   - **Parallelism:** 5D strategy (TP, PP, CP, DP, EP)
-  - **Batch:** Global **1024**, Micro **1** (gradient accumulation)
+  - **Batch:** Global **1024**, Micro **1**
   - **Optimizer:** AdamW (distributed sharded)
-  - **Learning Rate:** peak **1×10⁻⁴**, cosine decay, **5%** linear warm-up; **gradient clipping 1.0**; **weight decay 0.1**
-  - **Precision:** **BF16** for most compute; **FP32** for softmax (attention), gradient accumulation / **All-Reduce**, and MoE routing; BF16 matmul disabled on those sensitive paths
+  - **Learning rate:** peak **1e-4**, cosine decay, warm-up in **5-10%** range
+  - **Precision:** **BF16** compute, **FP32** for softmax/gradients/routing
 
 - **Key Optimizations**
-  - **MoE load balancing:** auxiliary loss **1×10⁻³** + router **Z-loss 1×10⁻³**
-  - **Communication / compute:** grouped **GEMM**, **AllToAll** dispatch, overlapped parameter aggregation and gradient reduction
-  - **I/O:** **cyclic** data loader with **8** worker processes
-  - **Memory / attention:** Flash Attention; GQA for KV efficiency
+  - **MoE balancing:** aux loss **1e-3** + Z-loss **1e-3**
+  - **Communication:** grouped GEMM + AllToAll + overlapped gradient reduction
+  - **Memory:** Flash Attention + sequence parallel + distributed optimizer
+  - **I/O:** cyclic dataloader with multi-worker prefetch
+
+- **Representative Fine-tuning**
+  - **Task:** RNA-seq coverage prediction
+  - **Data:** ENCODE + GTEx (667 normalized samples)
+  - **Architecture:** Genos backbone + 3-layer CNN head
+  - **Hardware:** 64×H100, bf16
+  - **Training:** 1 epoch, LR **5e-5**, cosine schedule
 
 ## 3. Performance Evaluation  
 - **Short-sequence tasks:** Competitive overall performance with strong results in chromatin accessibility, epigenetic marks, and small RNA prediction, but weaker in splice sites and variant detection.  
@@ -93,12 +102,12 @@ We strongly recommend deploying Genos using Docker.
 
 Pull the Docker Image
 ```
-docker pull zjlabgenos/mega:v1
+docker pull zjlabogr/onegenomerice:mega
 ```
 
 Run the Container
 ```
-docker run -it --gpus all --shm-size 32g zjlabgenos/mega:v1 /bin/bash
+docker run -it --gpus all --shm-size 32g zjlabogr/onegenomerice:mega /bin/bash
 ```
 
 ### Model Download
@@ -122,7 +131,7 @@ TODO
 ## 5. Application Scenarios(TODO!)
 To further illustrate the practical value, extensibility, and potential of Genos, we present two representative application cases.
 
-- **Case 1: [*Indica*-*Japonica* Introgression Identification](applications/4.gene_expression_modeling_on_DNA_and_ATAC/senario.md)**  
+- **Case 1: [*Indica*-*Japonica* Introgression Identification](applications/1.indica-japonica_introgression_analysis/README.md)**  
   This case aims to exploit the capacity of the OGR foundation model for fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (*Oryza sativa* subsp. *indica*) and *japonica* (*Oryza sativa* subsp. *japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OGR model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
   
 - **Case 2: [Identification of Trait-Associated Loci](applications/2.Identification_of_Trait-Associated_Loci/Readme.md)**  
@@ -136,18 +145,18 @@ To further illustrate the practical value, extensibility, and potential of Genos
 This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
 ## 6. Model Inference Optimization and Adaptation(待确认)
 ### vLLM Inference
-We conduct inference optimization experiments on large language models using the vLLM framework. This initiative significantly enhances throughput and reduces inference latency. By leveraging vLLM’s innovative ```PagedAttention``` algorithm and efficient memory management mechanisms, we achieve a throughput improvement of over 7× compared with conventional inference approaches.
+We conduct inference optimization experiments on large language models using the vLLM framework. This initiative significantly enhances throughput and reduces inference latency. By leveraging vLLM's innovative ```PagedAttention``` algorithm and efficient memory management mechanisms, we achieve a throughput improvement of over 7× compared with conventional inference approaches.
 
 - Pull the Docker Image
 
 ```
-docker pull zjlabgenos/vllm:v1
+docker pull zjlabogr/vllm
 ```
 
 - Run the Container
 
 ```
-docker run -it --entrypoint /bin/bash --gpus all --shm-size 32g zjlabgenos/vllm:v1
+docker run -it --entrypoint /bin/bash --gpus all --shm-size 32g zjlabogr/vllm
 ```
 
 - For detailed test results and practical usage examples of vLLM, please refer to the [vllm example](https://github.com/zhejianglab/Genos/blob/main/Notebooks/04.vllm_example.ipynb).
