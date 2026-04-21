@@ -268,7 +268,7 @@ Common keys: `learning_rate`, `per_device_train_batch_size`, `gradient_accumulat
 ## 13. Security and environment
 
 - Training configures **W&B offline** by default in `model/env.py` when applicable.
-- Prefer **absolute paths** in YAML for reproducibility on clusters.
+- Prefer **absolute paths** in YAML for reproducibility.
 
 ---
 

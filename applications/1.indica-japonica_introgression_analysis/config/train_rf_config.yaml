@@ -1,0 +1,38 @@
+model:
+  path: "model/rice_1B_stage2_8k_hf"
+  name: "rice_1B_stage2_8k_hf"
+  hidden_layers: 12
+
+
+dataset:
+  feature_path: "data/datasets_info.yaml"
+  data_path: "data"
+  eval_datasets:
+    - rice_introgression_jap-ind
+
+
+environment:
+  seed: 42
+  gpu_list: []
+  batch_size: 8
+
+
+embedding:
+  output_dir: "embedding_path"
+  extract_split: 50000
+
+
+output:
+  result_dir: "results_path"
+
+
+evaluation:
+  layers: [12]
+  pooled_embeddings_cat_dim: 0
+  classifier_type: "RF"
+
+
+classifiers:
+  random_forest:
+    n_estimators: 1000
+    random_state: 42

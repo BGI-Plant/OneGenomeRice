@@ -1,4 +1,4 @@
-# finetuned model for RNA prediction
+# Gene Expression Prediction of DNA Sequence
 
 This repository trains and runs models that predict nucleotide-resolution multi-modal data for DNA sequences up to 32 kb in length. The training data should be in BigWig format, and a reference genome must be included
 

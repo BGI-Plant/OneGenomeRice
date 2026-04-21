@@ -1,4 +1,4 @@
-# Gene Expression Prediction based on DNA and Other Modality
+# Gene Expression Prediction Based on Multi-modal Data
 ## 1. Overview
 A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits.
 This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.

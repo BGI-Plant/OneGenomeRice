@@ -1,0 +1,28 @@
+input:
+  dataset_name: "rice_introgression_jap_ind"
+  fasta_files:
+    path:
+      - 'fasta_data/01.genome.fa'
+      - 'fasta_data/02.genome.fa'
+    label:
+      - [1, 0]
+      - [0, 1]
+
+models:
+  llm_name: "rice_1B_stage2_8k_hf"
+  llm_path: "model/rice_1B_stage2_8k_hf"
+  rf_model_path: "results_path/rice_1B_stage2_8k_hf/last_epoch_model/rice_introgression_jap-ind-12layer.rf.pkl"
+
+
+output:
+  output_dir: "results_path"
+  embedding_dir: "embedding_path"
+
+
+data_processing:
+  window_size: 8000
+  step_size: 8000
+
+
+prediction:
+  threshold: 0.5
