@@ -77,12 +77,12 @@ test_data:
 # =============================================================================
 
 training:
-  learning_rate: 8.0e-5
+  # learning_rate: 8.0e-5
   # Discriminative LR (two param groups: base last layer vs downstream head).
   # When enabled, unset *_backbone/_head fall back to learning_rate.
-  # discriminative_lr: true
-  # learning_rate_backbone: 3.0e-5
-  # learning_rate_head: 1.5e-4
+  discriminative_lr: true
+  learning_rate_backbone: 3.0e-5
+  learning_rate_head: 1.5e-4
   #
   # LR scheduler (Hugging Face `TrainingArguments`).
   # Defaults match current behavior: linear warmup + linear decay.
@@ -100,7 +100,7 @@ training:
   # - cosine_warmup_with_min_lr
   # - warmup_stable_decay
   #
-  # lr_scheduler_type: linear
+  lr_scheduler_type: linear
   #
   # Advanced: pass through extra scheduler kwargs.
   # Examples:
@@ -108,25 +108,25 @@ training:
   # - polynomial: {"lr_end": 1.0e-6, "power": 1.0}
   # - cosine_with_min_lr: {"min_lr_rate": 0.05, "num_cycles": 0.5}
   # lr_scheduler_kwargs: {}
+  warmup_ratio: 0.05
   per_device_train_batch_size: 5
   gradient_accumulation_steps: 20
   # Optional: scale grad accum with world_size — see config.example/training.yaml comments
-  # scale_gradient_accumulation_for_world_size: false
-  num_train_epochs: 20
+  scale_gradient_accumulation_for_world_size: true
+  num_train_epochs: 80
   weight_decay: 0.01
   # max_grad_norm: 1.0   # HF Trainer gradient clipping (default 1.0); set 0 to disable clipping
   logging_steps: 1
   optim: "adafactor"
-  # run_name: "10b_atac_strand_paired"
-  # save_num_per_epoch: 1
-  save_per_n_epoch: 5
-  save_total_limit: 5
   # Checkpoint saving options (mutually exclusive unless both are 1):
   # - save_num_per_epoch: K   # save ~K times per epoch (uses save_strategy=steps)
   # - save_per_n_epoch: N     # save every N epochs (end of epoch N, 2N, 3N, ...)
   # save_num_per_epoch: 4
   # save_per_n_epoch: 3
-  warmup_ratio: 0.05
+  # save_num_per_epoch: 1
+  save_per_n_epoch: 5
+  save_total_limit: 5
+
 
 # =============================================================================
 # Section 4: Inference Configuration 
@@ -150,6 +150,5 @@ save_csv: true
 save_pickle: true
 # run.py only: after inference, run collect_stats.py (parallel calc_metrics + stats.wide CSV).
 collect_stats: true
-# Metrics region is fixed (full only); no config key.
 # inference_batch_size: 1  # optional; defaults to batch_size when omitted
 

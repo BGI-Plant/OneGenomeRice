@@ -1,8 +1,8 @@
-# **ScenarioⅠ: *Indica*-*Japonica* Introgression Identification**
+# **ScenarioⅠ: Identification of *indica-japonica* Introgression**
 
 ## **1.Task Description**
 
-This task aims to leverage the representation learning capability of the OneGenome-Rice foundation model to perform fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (Oryza Sativa subsp. *Indica*) and *japonica* (Oryza Sativa subsp. *Japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OneGenome-Rice model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
+This case aims to exploit the capacity of the OGR foundation model for fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (*Oryza sativa* subsp. *indica*) and *japonica* (*Oryza sativa* subsp. *japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted using the OGR model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
 
 ## **2.Data Source and Processing**
 
@@ -12,49 +12,73 @@ Data foundation: a collection of high-quality assembled rice genomes
 
 Subpopulation assignment: based on subpopulation labels from the RiceVarMap database
 
-Sample selection: samples overlapping with the 3KRGP (3K Rice Genome Project) were selected, followed by further filtering using whole-genome variation–based principal component analysis (PCA). Finally, each 10 representative samples were selected from both *indica* and temperate *japonica* groups, aiming to preserve within-subpopulation genetic diversity while minimizing potential interference from introgression introduced during breeding history. And one additional representative sample from each of *indica* and *japonica* was selected to construct an independent test set for evaluation.
+Sample selection: samples overlapping with the 3KRGP (3K rice genome project) were selected, followed by further filtering using whole-genome variation–based principal component analysis (PCA). Finally, each 10 representative samples were selected from both *indica* and temperate *japonica* groups, aiming to preserve within-subpopulation genetic diversity while minimizing potential interference from introgression introduced during breeding history. And one additional representative sample from each of *indica* and *japonica* was selected to construct an independent test set for evaluation.
+
+| Sample Name     | ID_3K          | Region      | Subpop                | Set          | DOI                        |
+| --------------- | -------------- | ----------- | --------------------- | ------------ | -------------------------- |
+| Aimakang        | B115           | China       | *Indica* I          | Training Set | 10.1038/s41588-025-02365-1 |
+| Lucaihao        | B208           | China       | *Indica* I          | Training Set | 10.1038/s41588-025-02365-1 |
+| Nantehao        | B062           | China       | *Indica* I          | Training Set | 10.1038/s41588-025-02365-1 |
+| Gang_46B        | CX10           | China       | *Indica* I          | Training Set | 10.1101/gr.276015.121      |
+| Guangluai_4     | B061           | China       | *Indica* I          | Training Set | 10.1101/gr.276015.121      |
+| TAICHUNGNATIVE1 | CX270          | China       | *Indica* I          | Training Set | 10.1101/gr.276015.121      |
+| Gui_630         | B242           | China       | *Indica* II         | Training Set | 10.1016/j.cell.2021.04.046 |
+| IR64-IL         | CX230          | China       | *Indica* II         | Training Set | 10.1016/j.cell.2021.04.046 |
+| Laozaogu        | B246           | China       | *Indica* III        | Training Set | 10.1038/s41588-025-02365-1 |
+| LUO_SI_ZHAN     | IRIS_313-11728 | China       | *Indica* III        | Training Set | 10.1101/gr.276015.121      |
+| Jindao_1        | B236           | China       | Temperate*Japonica* | Training Set | 10.1038/s41588-025-02365-1 |
+| Zhengdao_5      | B240           | China       | Temperate*Japonica* | Training Set | 10.1038/s41588-025-02365-1 |
+| Heibiao         | B001           | China       | Temperate*Japonica* | Training Set | 10.1038/s41588-025-02365-1 |
+| Annongwangeng_B | B250           | China       | Temperate*Japonica* | Training Set | 10.1101/gr.276015.121      |
+| Linguo          | B171           | Italy       | Temperate*Japonica* | Training Set | 10.1038/s41588-025-02365-1 |
+| Yueguang        | CX330          | Japan       | Temperate*Japonica* | Training Set | 10.1016/j.cell.2021.04.046 |
+| Gongchengxiang  | B045           | Japan       | Temperate*Japonica* | Training Set | 10.1038/s41588-025-02365-1 |
+| Qiutianxiaoting | B046           | Japan       | Temperate*Japonica* | Training Set | 10.1101/gr.276015.121      |
+| Qingjinzaosheng | B167           | North Korea | Temperate*Japonica* | Training Set | 10.1101/gr.276015.121      |
+| MAEKJO          | IRIS_313-10097 | South Korea | Temperate*Japonica* | Training Set | 10.1101/gr.276015.121      |
+| Heidu 4         | B081           | China       | *Indica* I          | Test Set     | 10.1038/s41588-025-02365-1 |
+| Dandongludao    | B069           | China       | Temperate*Japonica* | Test Set     | 10.1038/s41588-025-02365-1 |
 
 ## **3. Task Design**
 
-### **(1) Overall Framework**
+### **3.1 Overall Framework**
 
 The model is built upon the OneGenome-Rice foundation model. Unlike conventional fine-tuning approaches, this study does not update the parameters of the foundation model. Instead, it directly extracts embeddings from each 8 kb sequence and builds a lightweight downstream predictive model based on these representations, with the core workflow as follows:
 
-![Overall framework and workflow](images/Introgression_Analysis-a.png)
+![Overall framework and workflow](images/Introgression_Framework.png)
 
 **Data Construction and Partitioning**: Whole-genome sequences from *indica* and *japonica* rice are collected and divided into training and test sets at the individual level (10:1 ratio).
 
 **Genomic Window Segmentation**: Each genome is partitioned into fixed-length sliding windows (8 kb), generating a set of sequence fragments that cover the entire genome.
 
-**Sequence Representation Extraction**: Each 8 kb sequence fragment is encoded using the OneGenome-Rice foundation model to obtain high-dimensional embedding representations.
+**Sequence Representation Extraction**: Each 8 kb sequence fragment is encoded using the OGR foundation model to obtain high-dimensional embedding representations.
 
 **Downstream Modeling**: A random forest model is trained on these embeddings to learn the mapping from sequence representations to subpopulation assignment probabilities ($P_{\mathrm{indica}}$: probability of belonging to *indica*; $P_{\mathrm{japonica}}$: probability of belonging to *japonica*).
 
 **Introgression Map Construction and Performance Evaluation**: Predictions are generated on the test set, and the resulting probabilities are visualized along genomic coordinates to construct introgression landscapes. At the same time, indicators such as AUC and ACC are used to quantitatively evaluate the model performance.
 
-### **(2) Model Evaluation**
+### **3.2 Model Evaluation**
 
 Model performance is evaluated on the test set using the true subpopulation labels of each sample. Classification performance is assessed using AUC (Area Under the Curve) and ACC (Accuracy), which together reflect the model’s overall ability to distinguish subpopulation origins.
 
-| **Test Set** | **Classifier** | **ACC** | **AUC** |
-| --- | --- | --- | --- |
-| 1 Temperate *Japonica* | Random Forest | 0.804 | 0.794 |
-| + 1 *Indica* | (n_estimators=100) |  |  |
+|           **Test Set**           |       **Classifier**       | **ACC** | **AUC** |
+| :------------------------------------: | :------------------------------: | :-----------: | :-----------: |
+| 1 Temperate*japonica* + 1 *indica* | Random Forest (n_estimators=100) |     0.804     |     0.794     |
 
-Based on the subpopulation probabilities ($P_{\mathrm{indica}}$ and $P_{\mathrm{japonica}}$), genomic segments are classified as follows:
+Based on the subpopulation probabilities ($P_{\mathrm{*indica*}}$ and $P_{\mathrm{*japonica*}}$), genomic segments are classified as follows:
 
-- If either probability exceeds 0.8, the segment is assigned to the corresponding subpopulation.  
+- If either probability exceeds 0.8, the segment is assigned to the corresponding subpopulation.
 - If both probabilities are below 0.8, or both exceed 0.8, the segment is classified as a low-differentiation region, indicating weak or ambiguous subpopulation signals.
 
-This strategy enables effective identification of: 1) regions with pure subpopulation origin; 2) potential introgressed segments; 3) conserved shared regions
+This strategy enables effective identification of: 1) regions with pure origin; 2) potential introgressed segments; 3) conserved shared regions between *japonica* and *indica*
 
-### **(3) Case Study**
+### **3.3 Case Study**
 
 We tried to apply this framework to investigate *indica* introgression in the *japonica* cultivar Yanfeng 47 (YF47), a representative breeding line derived from historical inter-subspecific breeding behavior. These regions were consistently organized in extended blocks rather than isolated loci, indicating that introgression is captured at the segment level, reflecting the introgression of adjacent genomic fragments during breeding.
 
-![Case study illustration (e.g. YF47)](images/Introgression_Analysis-b.png)
+![Case study illustration (e.g. YF47)](images/Elite_Japonica_Cultivar_YF47_Introgression.png)
 
-## **(4) Project structure**
+## **4. Project structure**
 
 **Directory Tree:**
 
@@ -93,11 +117,11 @@ Introgression_Analysis/
 │
 ├── fasta_data/                        # Input FASTA files
 │   ├── japonica.train01.genome.fa     # Japonica training genome
-│   ├── ...                   
+│   ├── ...               
 │   ├── japonica.train10.genome.fa
 │   │
 │   ├── indica.train01.genome.fa       # Indica training genome
-│   ├── ...                   
+│   ├── ...               
 │   ├── indica.train10.genome.fa
 │   │
 │   ├── japonica.test01.genome.fa      # Japonica test genome
@@ -130,6 +154,7 @@ Introgression_Analysis/
 ```
 
 **Key directories:**
+
 - 📁 **data/**: Contains or will contain JSONL training/test splits
 - 📁 **fasta_data/**: Place your FASTA files here before running `genomic_window_egmentation.py`
 - 📁 **model/**: Download foundation model weights and place here
@@ -138,18 +163,18 @@ Introgression_Analysis/
 
 **Detailed file roles:**
 
-| Path | Role |
-| --- | --- |
-| `scripts/train_rf.py` | Loads the foundation model, extracts layer embeddings for `train` / `test` JSONL splits, trains multilabel random forests per layer, evaluates on the held-out split, writes `training_results.tsv` and `*.rf.pkl` checkpoints. **Requires** windowed JSONL under `data/<dataset>/` (typically produced first by `utils/genomic_window_egmentation.py`). |
-| `scripts/variety_inference.py` | Sliding windows over input FASTA, embedding extraction, RF prediction, per-window TSV plus aggregate `result_metrics.json`. |
-| `benchmarks/embedding_extract.py` | `JSONLDataset` and embedding extraction utilities used by training. |
-| `utils/genomic_window_egmentation.py` | CLI to build `train.jsonl` / `test.jsonl` from grouped FASTA paths. |
-| `utils/compute_metrics.py` | Shared metrics helpers; can aggregate existing TSVs from the command line. |
-| `config/train_rf_config.yaml` | Training: model path, dataset list, embedding and results directories, RF hyperparameters, layers to evaluate. |
-| `config/variety_inference_config.yaml` | Inference: FASTA list, labels for evaluation, paths to LLM and trained RF, window/step sizes, output dirs, probability threshold. |
-| `data/datasets_info.yaml` | Declares supported dataset names and per-dataset keys (`seq_key`, `label_key`, splits). |
+| Path                                     | Role                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/train_rf.py`                  | Loads the foundation model, extracts layer embeddings for `train` / `test` JSONL splits, trains multilabel random forests per layer, evaluates on the held-out split, writes `training_results.tsv` and `*.rf.pkl` checkpoints. **Requires** windowed JSONL under `data/<dataset>/` (typically produced first by `utils/genomic_window_egmentation.py`). |
+| `scripts/variety_inference.py`         | Sliding windows over input FASTA, embedding extraction, RF prediction, per-window TSV plus aggregate `result_metrics.json`.                                                                                                                                                                                                                                              |
+| `benchmarks/embedding_extract.py`      | `JSONLDataset` and embedding extraction utilities used by training.                                                                                                                                                                                                                                                                                                      |
+| `utils/genomic_window_egmentation.py`  | CLI to build `train.jsonl` / `test.jsonl` from grouped FASTA paths.                                                                                                                                                                                                                                                                                                    |
+| `utils/compute_metrics.py`             | Shared metrics helpers; can aggregate existing TSVs from the command line.                                                                                                                                                                                                                                                                                                 |
+| `config/train_rf_config.yaml`          | Training: model path, dataset list, embedding and results directories, RF hyperparameters, layers to evaluate.                                                                                                                                                                                                                                                             |
+| `config/variety_inference_config.yaml` | Inference: FASTA list, labels for evaluation, paths to LLM and trained RF, window/step sizes, output dirs, probability threshold.                                                                                                                                                                                                                                          |
+| `data/datasets_info.yaml`              | Declares supported dataset names and per-dataset keys (`seq_key`, `label_key`, splits).                                                                                                                                                                                                                                                                                |
 
-## **(5) Quick Start**
+## **5. Quick Start**
 
 ### **Quick Environment Setup**
 
@@ -173,6 +198,7 @@ bash create_env.sh
 ```
 
 The script will:
+
 - create and activate `env_introgression_analysis`;
 - install CUDA 12.8 PyTorch (`torch/torchvision/torchaudio`);
 - install the remaining Python dependencies.
@@ -181,10 +207,10 @@ Best for: quick reproducible setup with fewer manual commands.
 
 #### **Option 3: Offline PyTorch install (slow/no network servers)**
 
-Best for: servers with slow or restricted internet, where **PyTorch installation is the main bottleneck**.  
-Recommended approach: install only the PyTorch trio offline; install remaining packages via regular `pip`.
+Best for: servers with slow or restricted internet, where **PyTorch installation is the main bottleneck**.Recommended approach: install only the PyTorch trio offline; install remaining packages via regular `pip`.
 
 1) On a machine with internet, download PyTorch wheels:
+
 - from the official CUDA 12.8 index:
   - `torch-2.10.0+cu128-cp311-cp311-<platform>.whl`
   - `torchvision-0.25.0+cu128-cp311-cp311-<platform>.whl`
@@ -226,6 +252,7 @@ cat results_path/rice_1B_stage2_8k_hf/rice_introgression_jap_ind_ws8k_step8k/res
 ```
 
 **Expected output structure:**
+
 ```
 results_path/
 ├── rice_1B_stage2_8k_hf/
@@ -238,7 +265,7 @@ results_path/
 │       └── result_metrics.json         # Overall metrics (ACC, AUC)
 ```
 
-## **(6) Usage**
+## **6. Usage**
 
 Run all commands from the **repository root** so relative paths in the YAML files resolve correctly.
 
@@ -247,17 +274,15 @@ Run all commands from the **repository root** so relative paths in the YAML file
 ### **6.1 Environment**
 
 See **Section 5** for environment setup instructions. Quick summary:
+
 - **Recommended**: Option 1, `pip install -r requirements.txt` (most stable and consistent)
 - **Automated**: Option 2, run `bash create_env.sh` (quick reproducible setup)
 - **Offline**: Option 3, pre-download `.whl` for PyTorch and install remaining deps with `pip`
 
 ### **6.2 Foundation model and data layout**
 
-1. **Foundation model**  
-   Point `model.path` / `models.llm_path` in the YAML files to a local Hugging Face–style directory (default in configs: `model/rice_1B_stage2_8k_hf`). Inference uses `local_files_only=True`, so weights must be present on disk.
-
-2. **Step 1 — Split genomes into windows (`utils/genomic_window_egmentation.py`)**  
-   Before `scripts/train_rf.py`, you must prepare the training and test JSONL files. The usual path is to slice FASTA genomes into fixed windows with this script.
+1. **Foundation model**Point `model.path` / `models.llm_path` in the YAML files to a local Hugging Face–style directory (default in configs: `model/rice_1B_stage2_8k_hf`). Inference uses `local_files_only=True`, so weights must be present on disk.
+2. **Step 1 — Split genomes into windows (`utils/genomic_window_egmentation.py`)**Before `scripts/train_rf.py`, you must prepare the training and test JSONL files. The usual path is to slice FASTA genomes into fixed windows with this script.
 
    Place FASTA files under `fasta_data/` (or edit `FASTA_GROUPS` / pass `--fasta-root`). Then run:
 
@@ -266,15 +291,14 @@ See **Section 5** for environment setup instructions. Quick summary:
    ```
 
    This writes `data/rice_introgression_jap-ind/train.jsonl` and `data/rice_introgression_jap-ind/test.jsonl` (8 kb windows; train step 4 kb, test step 8 kb per script defaults). Paths must match `dataset.data_path` and `dataset.eval_datasets` in `config/train_rf_config.yaml`.
-
-3. **Training JSONL format**  
-   Each line must be a JSON object with at least the keys configured in `data/datasets_info.yaml` (`sequence` and `label` for `rice_introgression_jap-ind`). Labels are multilabel vectors used by `RandomForestClassifier` (one RF per output dimension). If you already have compatible JSONL from another pipeline, you may place them under `data/<dataset_name>/` instead of running the window script.
+3. **Training JSONL format**Each line must be a JSON object with at least the keys configured in `data/datasets_info.yaml` (`sequence` and `label` for `rice_introgression_jap-ind`). Labels are multilabel vectors used by `RandomForestClassifier` (one RF per output dimension). If you already have compatible JSONL from another pipeline, you may place them under `data/<dataset_name>/` instead of running the window script.
 
    **JSONL Format Specification:**
 
    **File location:** `data/rice_introgression_jap-ind/train.jsonl` or `test.jsonl`
 
    **Each line is a JSON object with this structure:**
+
    ```json
    {
      "sequence": "ATCGATCGATCG...",
@@ -284,12 +308,14 @@ See **Section 5** for environment setup instructions. Quick summary:
 
    **Field details:**
 
-   | Field | Type | Description | Example |
-   | --- | --- | --- | --- |
-   | `sequence` | string | DNA sequence (case-insensitive, A/T/G/C/N only) | `"ATCGATCG"` |
-   | `label` | array of 2 ints | Multilabel vector: `[japonica_binary, indica_binary]` | `[1, 0]` (pure japonica) or `[0, 1]` (pure indica) |
+   | Field        | Type            | Description                                            | Example                                                |
+   | ------------ | --------------- | ------------------------------------------------------ | ------------------------------------------------------ |
+   | `sequence` | string          | DNA sequence (case-insensitive, A/T/G/C/N only)        | `"ATCGATCG"`                                         |
+   | `label`    | array of 2 ints | Multilabel vector:`[japonica_binary, indica_binary]` | `[1, 0]` (pure japonica) or `[0, 1]` (pure indica) |
 
    **Example JSONL file:**
+
+
    ```
    {"sequence": "ATCGATCGATCGATCGATCGATCGATCG", "label": [1, 0]}
    {"sequence": "TCGATCGATCGATCGATCGATCGATCGA", "label": [1, 0]}
@@ -299,13 +325,13 @@ See **Section 5** for environment setup instructions. Quick summary:
 
    **Automatic generation via `genomic_window_egmentation.py`:**
    The script automatically converts FASTA files into this format:
+
    - Reads multi-sequence FASTA
    - Trims leading/trailing N bases
    - Creates fixed-length sliding windows (default: 8 kb for training, same for test)
    - Assigns labels based on the source file (japonica vs. indica)
    - Outputs JSONL with one JSON object per window
-
-4. **Edit output paths in YAML**  
+4. **Edit output paths in YAML**
    In `config/train_rf_config.yaml`, set `embedding.output_dir` and `output.result_dir` (defaults `embedding_path`, `results_path`). The trained RF path used later is under `results_path/<model.name>/last_epoch_model/`.
 
 ### **6.3 Train the random forest (`scripts/train_rf.py`)**
@@ -354,6 +380,7 @@ bash run_variety_inference.sh
 ### **6.5 Output Data Formats**
 
 **Per-genome TSV (`*_results.tsv`):**
+
 ```
 chrom	start	end	ground_truth	label	prob_japonica	prob_indica	group
 chr1	0	8000	[1,0]	japonica	0.92	0.08	japonica
@@ -363,16 +390,16 @@ chr1	16000	24000	[1,0]	introgressed	0.45	0.55	indica
 
 **Column definitions:**
 
-| Column | Type | Description |
-| --- | --- | --- |
-| `chrom` | string | Chromosome/sequence identifier |
-| `start` | int | Window start position (0-based) |
-| `end` | int | Window end position (exclusive) |
-| `ground_truth` | string | True label `[japonica_binary, indica_binary]` |
-| `label` | string | Predicted class: `japonica`, `indica`, or `ambiguous` |
-| `prob_japonica` | float | Probability of *japonica* origin (0.0–1.0) |
-| `prob_indica` | float | Probability of *indica* origin (0.0–1.0) |
-| `group` | string | Classification result |
+| Column            | Type   | Description                                                |
+| ----------------- | ------ | ---------------------------------------------------------- |
+| `chrom`         | string | Chromosome/sequence identifier                             |
+| `start`         | int    | Window start position (0-based)                            |
+| `end`           | int    | Window end position (exclusive)                            |
+| `ground_truth`  | string | True label `[japonica_binary, indica_binary]`            |
+| `label`         | string | Predicted class:`japonica`, `indica`, or `ambiguous` |
+| `prob_japonica` | float  | Probability of*japonica* origin (0.0–1.0)               |
+| `prob_indica`   | float  | Probability of*indica* origin (0.0–1.0)                 |
+| `group`         | string | Classification result                                      |
 
 ### **6.6 Optional: aggregate metrics from TSV files**
 
