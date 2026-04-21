@@ -122,7 +122,7 @@ TODO
 ## 5. Application Scenarios(TODO!)
 To further illustrate the practical value, extensibility, and potential of Genos, we present two representative application cases.
 
-- **Case 1: [*Indica*-*Japonica* Introgression Identification](RNA-seq_data_generation/Case_1_RNA-Seq_Data_Generation.md)**  
+- **Case 1: [*Indica*-*Japonica* Introgression Identification](indica-japonica_introgression_analysis/README.md)**  
   This case illustrates how Genos can be fine-tuned to generate transcriptomic profiles at single-nucleotide resolution directly from genomic sequences. This approach enables computational reconstruction of expression landscapes, reduces experimental costs, and provides a robust foundation for downstream functional genomics analyses.
 
 - **Case 2: [Text-Genome Model Fusion](Text-genome_model_fusion/Case_2_Text_Genome_Model_Fusion.md)**  
