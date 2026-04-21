@@ -108,13 +108,12 @@ OGR pre-training is built on **[Megatron-LM](https://github.com/NVIDIA/Megatron-
 - **Pre-training Strategy**
 
   - **Objective:** self-supervised Next Token Prediction (**NTP**)
-  - **Length curriculum:** **8K → 32K → 128K → 1M** tokens
-  - **Orientation:** reverse-complement used across scales
-  - **Data:** chromosome-scale de novo assemblies from public resources
+  - **Progressive Context Scaling:** **8K → 32K → 128K → 1M** tokens
+  - **Data**: high-quality, chromosome-scale de novo assemblies from publicly available resources
   - **Tokenizer:** one-hot DNA encoding (A, T, C, G, N)
 - **Infrastructure**
 
-  - **Framework:** Megatron-LM on large A100 clusters (up to **256** GPUs)
+  - **Framework:** Megatron-LM on 128 GPUs
   - **Parallelism:** 5D strategy (TP, PP, CP, DP, EP)
   - **Batch:** Global **1024**, Micro **1**
   - **Optimizer:** AdamW (distributed sharded)
