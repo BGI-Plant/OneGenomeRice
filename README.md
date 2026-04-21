@@ -119,6 +119,9 @@ To further illustrate the practical value, extensibility, and potential of Genos
 - **Case 2: [Text-Genome Model Fusion](Text-genome_model_fusion/Case_2_Text_Genome_Model_Fusion.md)**  
   This case explores a multimodal framework that integrates genome-scale sequence encoders with large language models. It emphasizes the ability to jointly leverage biological prior knowledge, literature-based reasoning, and sequence-level representations, paving the way for more intelligent, interpretable, and knowledge-grounded bio-AI systems.
 
+- **Case 3: ![Gene Expression Prediction based on DNA and Other Modality](gene_expression_modeling_on_DNA_and_ATAC/senario.md)**
+A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits.
+This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
 ## 6. Model Inference Optimization and Adaptation(待确认)
 ### vLLM Inference
 We conduct inference optimization experiments on large language models using the vLLM framework. This initiative significantly enhances throughput and reduces inference latency. By leveraging vLLM’s innovative ```PagedAttention``` algorithm and efficient memory management mechanisms, we achieve a throughput improvement of over 7× compared with conventional inference approaches.
