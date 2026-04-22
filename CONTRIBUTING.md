@@ -92,4 +92,4 @@ By submitting a contribution, you agree that your work will be licensed under th
 
 ## Maintenance & Contact
 
-This project is maintained by Zhejiang Lab. For questions or collaboration inquiries, please contact 📧 opensource@zhejianglab.org.
+This project is maintained by Zhejiang Lab and BGI. For questions or collaboration inquiries, please contact opensource@zhejianglab.org, or [bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn).
