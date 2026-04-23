@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenomeRice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
+This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenome-Rice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
 
 ## 2. Data
 
@@ -17,7 +17,7 @@ All required inputs are placed under `Data/`.
 | `osa1_r7.asm.fa.gz` | OSA1/R7 reference genome FASTA used for pseudo-sequence reconstruction |
 | `osa1_r7.asm.fa.gz.fai` / `osa1_r7.asm.fa.gz.gzi` | FASTA random-access indexes generated from `osa1_r7.asm.fa.gz` |
 | `chr06.gff3.gz` | Chr6 MSU Rice Genome Annotation Project osa1r6 gene annotation used for gene-level scoring |
-| `OneGenomeRice_model/` | Optional symlink or local directory for the pretrained OneGenomeRice 8 kb Hugging Face model |
+| `OneGenomeRice_model/` | Optional symlink or local directory for the pretrained OneGenome-Rice 8 kb Hugging Face model |
 
 The reference FASTA is not required to be committed with the repository. If it is missing, `0.env_check.sh` prints the configured download URL and can download, BGZF-compress, and index it automatically:
 
@@ -55,7 +55,7 @@ For gene-level prioritization, the workflow uses gene bodies from `chr06.gff3.gz
 
 ## 5. Environment
 
-Run the workflow inside an environment that can execute OneGenomeRice inference and the downstream scientific Python stack. The entry-point scripts use the currently active Python environment by default. If preferred, users can set `CONDA_ENV` or fill `environment.conda_env` and `environment.conda_sh` in `default_config.json` to run through `conda run`.
+Run the workflow inside an environment that can execute OneGenome-Rice inference and the downstream scientific Python stack. The entry-point scripts use the currently active Python environment by default. If preferred, users can set `CONDA_ENV` or fill `environment.conda_env` and `environment.conda_sh` in `default_config.json` to run through `conda run`.
 
 Required Python modules:
 

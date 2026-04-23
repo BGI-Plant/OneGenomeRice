@@ -1,4 +1,4 @@
-# OneGenomeRice (OGR): A Genomic Foundation Model for Rice
+# OneGenome-Rice (OGR): A Genomic Foundation Model for Rice
 
 <div align="center">
     <img src="figure/main.png" width="99%" alt="main" />
@@ -6,7 +6,7 @@
 
 ## 1. Introduction
 
-**OneGenomeRice(OGR)** is a foundational AI infrastructure for the next generation of AI-driven precision breeding and functional genomics in rice.
+**OneGenome-Rice(OGR)** is a foundational AI infrastructure for the next generation of AI-driven precision breeding and functional genomics in rice.
 OGR is a generative genomic foundation model designed to process DNA sequences up to 1 million base pairs in length. The model features 1.25 billion total parameters, utilizing a Mixture of Experts (MoE) architecture that allows for high representational capacity while maintaining computational efficiency during inference. OGR was pre-trained on a curated corpus of 422 rice genomes, representing a diverse array of genotypes from the rice genome group, which includes both modern high-yielding varieties and wild ancestral populations. We detail the architectural innovations, dataset composition, and application-specific findings that define OGR.
 
 ## 2. Model Information
@@ -42,7 +42,7 @@ The following table summarizes key specifications.
   <thead>
     <tr>
       <th align="center"><strong>Model Specification</strong></th>
-      <th align="center"><strong>OneGenomeRice (OGR)</strong></th>
+      <th align="center"><strong>OneGenome-Rice (OGR)</strong></th>
     </tr>
   </thead>
   <tbody>
@@ -186,14 +186,14 @@ To further illustrate the practical value, extensibility, and potential of OGR, 
   This case aims to exploit the capacity of the OGR foundation model for fine-scale inference of subspecies origin across the rice genome, enabling the identification of introgression between *indica* (Oryza sativa subsp. *indica*) and *japonica* (Oryza sativa subsp. *japonica*). Unlike traditional approaches that rely on SNP-based statistics or local sequence alignment, this study starts directly from raw genomic sequences. High-dimensional embeddings are extracted based on the OGR model, upon which downstream predictive models are built. This approach enables the capture of deep genetic structural differences at the sequence level, facilitating the identification of potential introgressed regions between subspecies.
 - **Case 2: [Trait-Associated Loci Finding](applications/2.identification_of_trait-associated_loci/Readme.md)**
 
-  This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenomeRice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
+  This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenome-Rice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
 - **Case 3: [Gene Expression Prediction of DNA Sequence](applications/3.gene_expression_prediction_of_DNA_sequence/README.md)**
 
-  This repository implements a scalable, multi-modal deep learning framework for single-nucleotide resolution RNA-seq prediction. Given a genomic DNA sequence window, the model learns to predict strand-specific transcriptional output by jointly modeling sequence context and regulatory signals. The architecture leverages a pre-trained DNA foundation model as a sequence encoder, paired with a U-Net-style regression head designed for multi-track genomic signal prediction. The framework supports full-parameter fine-tuning, distributed data-parallel training, and efficient inference, enabling downstream applications such as cis-regulatory variant effect prediction, allele-specific expression modeling, and transcriptome-informed breeding design.
+This repository implements a scalable, multi-modal deep learning framework for single-nucleotide resolution RNA-seq prediction. Given a genomic DNA sequence window, the model learns to predict strand-specific transcriptional output by jointly modeling sequence context and regulatory signals. The architecture leverages a pre-trained DNA foundation model as a sequence encoder, paired with a U-Net-style regression head designed for multi-track genomic signal prediction. The framework supports full-parameter fine-tuning, distributed data-parallel training, and efficient inference, enabling downstream applications such as cis-regulatory variant effect prediction, allele-specific expression modeling, and transcriptome-informed breeding design.
 
 - **Case 4: [Gene Expression Prediction Based on Multi-modal Data](applications/4.gene_expression_prediction_based_on_multi_modal_data/senario.md)**
 
-  A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits. This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
+A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits. This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
 
 
 ## 6. License and Uses
@@ -227,9 +227,9 @@ If you use this work in your research, please cite the following paper:
 }
 ```
 
-## 8. Maintenance and Contact
+## 8. Contact(TODO!)
 
-This project is maintained by [Zhejiang Lab](https://en.zhejianglab.com/) in collaboration with [BGI](https://www.bgi.com/global).
+For project-related questions, please submit an [issue](https://github.com/ZhejiangLab/OneGenomeRice/issues). 
 
-For project-related questions, please submit an [issue](https://github.com/ZhejiangLab/OneGenomeRice/issues). For general inquiries or collaboration, you can reach us at:
+For general inquiries, you can reach us at:
 📧[opensource@zhejianglab.org](mailto:opensource@zhejianglab.org) · 📧[OneGenomeRice@zhejianglab.org](mailto:OneGenomeRice@zhejianglab.org) · 📧[bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn)
