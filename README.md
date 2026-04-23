@@ -171,8 +171,8 @@ OGR models are available for download from [Hugging Face](https://huggingface.co
 
 <div align="center">
 
-| **Model** | **Total Params** |                    **Hugging Face**                    |                       **ModelScope**                       |
-| :-------------: | :--------------------: | :-----------------------------------------------------------: | :---------------------------------------------------------------: |
+| **Model** | **Total Params** |                      **Hugging Face**                      |                         **ModelScope**                         |
+| :-------------: | :--------------------: | :--------------------------------------------------------------: | :------------------------------------------------------------------: |
 |    OGR-1.25B    |         1.25B         | [🤗 Hugging Face](https://huggingface.co/ZhejiangLab/OneGenomeRice) | [🤖 ModelScope](https://modelscope.cn/models/zhejianglab/OneGenomeRice) |
 
 </div>
@@ -189,12 +189,11 @@ To further illustrate the practical value, extensibility, and potential of OGR, 
   This repository demonstrates a reproducible workflow for identifying rice candidate loci from bidirectional attention signals produced by OneGenome-Rice. The workflow reconstructs sample-specific sequences from variants, extracts forward and reverse-complement attention, performs position-level group comparisons, and summarizes gene-level differential signals in selected candidate regions.
 - **Case 3: [Gene Expression Prediction of DNA Sequence](applications/3.gene_expression_prediction_of_DNA_sequence/README.md)**
 
-This repository implements a scalable, multi-modal deep learning framework for single-nucleotide resolution RNA-seq prediction. Given a genomic DNA sequence window, the model learns to predict strand-specific transcriptional output by jointly modeling sequence context and regulatory signals. The architecture leverages a pre-trained DNA foundation model as a sequence encoder, paired with a U-Net-style regression head designed for multi-track genomic signal prediction. The framework supports full-parameter fine-tuning, distributed data-parallel training, and efficient inference, enabling downstream applications such as cis-regulatory variant effect prediction, allele-specific expression modeling, and transcriptome-informed breeding design.
+  This repository implements a scalable, multi-modal deep learning framework for single-nucleotide resolution RNA-seq prediction. Given a genomic DNA sequence window, the model learns to predict strand-specific transcriptional output by jointly modeling sequence context and regulatory signals. The architecture leverages a pre-trained DNA foundation model as a sequence encoder, paired with a U-Net-style regression head designed for multi-track genomic signal prediction. The framework supports full-parameter fine-tuning, distributed data-parallel training, and efficient inference, enabling downstream applications such as cis-regulatory variant effect prediction, allele-specific expression modeling, and transcriptome-informed breeding design.
 
 - **Case 4: [Gene Expression Prediction Based on Multi-modal Data](applications/4.gene_expression_prediction_based_on_multi_modal_data/senario.md)**
 
-A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits. This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
-
+  A central challenge in predictive genomics is linking static DNA sequence to dynamic, context-specific gene expression and traits. This scenario targets a concrete prediction task: given a genomic DNA sequence window and its aligned chromatin accessibility signal (ATAC-seq), predict the corresponding strand-specific RNA-seq signal at single-nucleotide resolution. By modeling DNA–ATAC interactions explicitly, the system aims to separate sequence-encoded potential from context-dependent activation, enabling base-level expression prediction that can support downstream analyses such as comparing regulatory conditions or simulating the effects of perturbations in silico.
 
 ## 6. License and Uses
 
@@ -210,11 +209,9 @@ A central challenge in predictive genomics is linking static DNA sequence to dyn
 
 The model training process was conducted on the 021 Large Science Model, Zero2X open platform, and Nanhu Computing Framework.
 
-
-
 ## 8. Contact(TODO!)
 
-For project-related questions, please submit an [issue](https://github.com/ZhejiangLab/OneGenomeRice/issues). 
+For project-related questions, please submit an [issue](https://github.com/ZhejiangLab/OneGenomeRice/issues).
 
 For general inquiries, you can reach us at:
 📧[opensource@zhejianglab.org](mailto:opensource@zhejianglab.org) · 📧[OneGenomeRice@zhejianglab.org](mailto:OneGenomeRice@zhejianglab.org) · 📧[bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn)
