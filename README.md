@@ -209,7 +209,7 @@ To further illustrate the practical value, extensibility, and potential of OGR, 
 
 The model training process was conducted on the 021 Large Science Model, Zero2X open platform, and Nanhu Computing Framework.
 
-## 8. Contact(TODO!)
+## 8. Contact
 
 For project-related questions, please submit an [issue](https://github.com/ZhejiangLab/OneGenomeRice/issues).
 
