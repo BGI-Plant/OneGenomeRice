@@ -232,6 +232,3 @@ For general inquiries, you can reach us at:
 📧[opensource@zhejianglab.org](mailto:opensource@zhejianglab.org) · 📧[OneGenomeRice@zhejianglab.org](mailto:OneGenomeRice@zhejianglab.org) · 📧[bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn)
 
 We welcome researchers interested in the development of crop genome foundation models and their application scenarios to join our collaborative research efforts. Together, we aim to explore new paradigms for integrating artificial intelligence with scientific research.
-
-For collaboration inquiries, please contact the project team directly at:  
-📧 [OneGenomeRice@zhejianglab.org](OneGenomeRice@zhejianglab.org)
