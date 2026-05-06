@@ -177,6 +177,18 @@ OGR models are available for download from [Hugging Face](https://huggingface.co
 
 </div>
 
+
+### Benchmark Download
+Benchmark is available for download from [Hugging Face](https://huggingface.co/datasets/ZhejiangLab/RiceBenchmark ) and [ModelScope](https://modelscope.cn/datasets/zhejianglab/RiceBenchmark ). 
+
+<div align="center">
+
+| **Benchmark** | **Hugging Face** | **ModelScope** |
+| :-------------: | :--------------------------------------------------------------: | :------------------------------------------------------------------: |
+| RiceBenchmark | [🤗 Hugging Face](https://huggingface.co/datasets/ZhejiangLab/RiceBenchmark ) | [🤖 ModelScope](https://modelscope.cn/datasets/zhejianglab/RiceBenchmark ) |
+
+</div>
+
 ## 5. Application Scenarios
 
 To further illustrate the practical value, extensibility, and potential of OGR, we present four representative application cases.
@@ -205,24 +217,9 @@ To further illustrate the practical value, extensibility, and potential of OGR, 
 
 **Ethical Considerations and Limitations**: Like other foundation models, OGR models may exhibit behaviors that carry potential risks. They may generate inaccurate outputs when interpreting rice genomic sequences or making inferences. Therefore, users should conduct rigorous validation and apply appropriate safeguards before using OGR in downstream research. Developers deploying applications based on OGR must carefully assess risks specific to their use cases.
 
-## 7. Acknowledgements
+## 7. Citation and Acknowledgements
 
-The model training was conducted based on the [021 Science Foundation Model](https://021.zero2x.org/home), [zero2x open science infrastructure](https://www.zero2x.org/), and Nanhu Computing Framework.
-
-If you use this work in your research, please cite the following paper:
-```
-@article {Qian2026.04.21.719822,
-	author = {Qian, Bilian and Liang, Chengwei and Qin, Chao and Liu, Chao and Zhang, Chunling and Xu, Chunyan and Li, Dongxu and Xue, Guirong and He, Hang and Zhang, He and He, Huiying and Chen, Duoyuan and Xu, Jiwei and Zhang, Junyang and Sun, Jian and Shang, Lianguang and Jiang, Jinling and Xia, Ke-ke and Zhong, Liyuan and Chen, Ling-ling and Fan, Longjiang and Liu, Longqi and Qin, Mu-mu and Li, Qian and Zhu, Shenjun and Ma, Shengwei and Liu, Shiping and Zhang, Shiyu and Fu, Shuai and Wei, Tong and Xu, Xiaolong and Jia, Xinye and Xu, Xun and Jing, Yi and Xu, Yu and Zhao, Yinuo and Xue, Yunlong and Guo, Yafei and Xiao, Zhan and Li, Zhaorong and Li, Zhefu and Yue, Zhen and Deng, Ziqing},
-	title = {OneGenomeRice (OGR): A Genomic Foundation Model for Rice},
-	elocation-id = {2026.04.21.719822},
-	year = {2026},
-	doi = {10.64898/2026.04.21.719822},
-	publisher = {Cold Spring Harbor Laboratory},
-	URL = {https://www.biorxiv.org/content/early/2026/04/23/2026.04.21.719822},
-	eprint = {https://www.biorxiv.org/content/early/2026/04/23/2026.04.21.719822.full.pdf},
-	journal = {bioRxiv}
-}
-```
+The model training process was conducted on the 021 Large Science Model, Zero2X open platform, and Nanhu Computing Framework.
 
 ## 8. Contact
 
@@ -230,5 +227,3 @@ For project-related questions, please submit an [issue](https://github.com/Zheji
 
 For general inquiries, you can reach us at:
 📧[opensource@zhejianglab.org](mailto:opensource@zhejianglab.org) · 📧[OneGenomeRice@zhejianglab.org](mailto:OneGenomeRice@zhejianglab.org) · 📧[bgi-plant@genomics.cn](mailto:bgi-plant@genomics.cn)
-
-We welcome researchers interested in the development of crop genome foundation models and their application scenarios to join our collaborative research efforts. Together, we aim to explore new paradigms for integrating artificial intelligence with scientific research.
